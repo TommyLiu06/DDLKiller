@@ -5,15 +5,13 @@
 #include <vector>
 
 struct Modification {
-    std::string userId;
-    int operationId;
     std::string operation;
     int targetId;
     std::string title;
     std::string description;
     std::string dueDate;
     int deleteFlag;
-    int completedFlag;
+    int completeFlag;
 };
 
 class DatabaseManager {
@@ -25,18 +23,16 @@ public:
     DatabaseManager& operator=(const DatabaseManager&) = delete;
 
     void addModification(
-        const std::string& userId,
-        const int& operationId,
         const std::string& operation,
         const int& targetId = 0,
         const std::string& title = "",
         const std::string& description = "",
         const std::string& dueDate = "",
-        int deleteFlag = 0,
-        int completedFlag = 0
+        const int& deleteFlag = 0,
+        const int& completeFlag = 0
     );
 
-    std::vector<Modification> getModificationsByUser(const std::string& userId);
+    std::vector<Modification> getModificationsAfterId(const int& lastProcessedId);
 
 private:
     SQLite::Database db;

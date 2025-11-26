@@ -1,0 +1,6 @@
+{
+    "type": "delete",
+    "content": {
+        "target_id": 12345
+    }
+}

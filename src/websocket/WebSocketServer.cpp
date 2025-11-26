@@ -35,12 +35,12 @@ void WebSocketServer::removeClient(std::shared_ptr<WebSocketSession> client)
     clients_.erase(client);
 }
 
-void WebSocketServer::broadcast(const std::string& msg)
+void WebSocketServer::broadcast(const std::string& msg, const std::shared_ptr<WebSocketSession>& exclude)
 {
     std::lock_guard<std::mutex> lock(clients_mutex_);
 
     for (auto& client : clients_) {
-        if (client) {
+        if (client && client != exclude) {
             try {
                 client->send(msg);
             } catch (...) {

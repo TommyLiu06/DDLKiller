@@ -24,7 +24,7 @@ public:
     void removeClient(std::shared_ptr<WebSocketSession> client);
 
     // 广播给所有 session
-    void broadcast(const std::string& msg);
+    void broadcast(const std::string& msg, const std::shared_ptr<WebSocketSession>& exclude = nullptr);
 
 private:
     tcp::acceptor acceptor_;

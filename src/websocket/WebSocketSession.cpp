@@ -41,7 +41,7 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
     delete buffer;
 
     // 广播给所有客户端
-    server_->broadcast(msg);
+    server_->broadcast(msg, shared_from_this());
 
     // 继续读下一条消息
     do_read();
