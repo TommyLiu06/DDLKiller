@@ -1,18 +1,6 @@
 #include "DatabaseManager.h"
 #include <stdexcept>
 
-DatabaseManager::Modification {
-    std::string userId;
-    int operationId;
-    std::string operation;
-    int targetId;
-    std::string title;
-    std::string description;
-    std::string dueDate;
-    int deleteFlag;
-    int completedFlag;
-};
-
 DatabaseManager::DatabaseManager(const std::string& dbPath)
     : db(dbPath, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE),
     insert(db, "INSERT INTO modifications ("
@@ -53,7 +41,7 @@ DatabaseManager::DatabaseManager(const std::string& dbPath)
 
 void DatabaseManager::addModification(
     const std::string& userId,
-    int operationId,
+    const int& operationId,
     const std::string& operation,
     const int& targetId = 0,
     const std::string& title = "",
@@ -76,7 +64,7 @@ void DatabaseManager::addModification(
     insert.reset();
 }
 
-std::vector<DatabaseManager::Modification> DatabaseManager::getModificationsByUser(const std::string& userId) {
+std::vector<Modification> DatabaseManager::getModificationsByUser(const std::string& userId) {
     std::vector<Modification> modifications;
 
     select.bind(1, userId);

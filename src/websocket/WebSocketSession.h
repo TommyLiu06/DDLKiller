@@ -1,5 +1,4 @@
-#ifndef WEBSOCKET_SESSION_H
-#define WEBSOCKET_SESSION_H
+#pragma once
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
@@ -40,5 +39,3 @@ private:
     // session 关闭时调用
     void on_close();
 };
-
-#endif

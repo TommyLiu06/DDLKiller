@@ -7,9 +7,9 @@ int main()
     try {
         boost::asio::io_context ioc;
 
-        WebSocketServer server(ioc, 8080);
+        WebSocketServer server(ioc, 8090);
 
-        std::cout << "Server started at ws://localhost:8080\n";
+        std::cout << "Server started at ws://localhost:8090\n";
 
         server.run();
 

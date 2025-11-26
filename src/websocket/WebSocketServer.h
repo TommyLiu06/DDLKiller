@@ -1,12 +1,11 @@
-#ifndef WEBSOCKET_SERVER_H
-#define WEBSOCKET_SERVER_H
+#pragma once
 
 #include <boost/asio.hpp>
 #include <set>
 #include <mutex>
 #include <memory>
-
-class WebSocketSession;
+#include <string>
+#include "WebSocketSession.h"
 
 class WebSocketServer
 {
@@ -34,5 +33,3 @@ private:
 
     void do_accept();
 };
-
-#endif

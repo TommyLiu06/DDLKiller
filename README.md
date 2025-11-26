@@ -30,7 +30,7 @@ make -j$(nproc)
 ### 3. Run Server
 
 ```bash
-./ws_server <port> <database_file>
+./ws_server <port> <database_path>
 ```
 
 example:

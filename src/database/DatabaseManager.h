@@ -1,8 +1,20 @@
+#pragma once
+
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <string>
 #include <vector>
 
-struct Modification;
+struct Modification {
+    std::string userId;
+    int operationId;
+    std::string operation;
+    int targetId;
+    std::string title;
+    std::string description;
+    std::string dueDate;
+    int deleteFlag;
+    int completedFlag;
+};
 
 class DatabaseManager {
 public:
