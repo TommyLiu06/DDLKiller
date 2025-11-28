@@ -4,13 +4,12 @@
 #include <string>
 #include <vector>
 
-struct Modification {
-    std::string operation;
-    int targetId;
+struct TodoItem {
+    unsigned int uuid;
+    unsigned int lastModified;
     std::string title;
     std::string description;
     std::string dueDate;
-    int deleteFlag;
     int completeFlag;
 };
 
@@ -22,17 +21,17 @@ public:
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
 
-    void addModification(
-        const std::string& operation,
-        const int& targetId = 0,
-        const std::string& title = "",
-        const std::string& description = "",
-        const std::string& dueDate = "",
-        const int& deleteFlag = 0,
-        const int& completeFlag = 0
-    );
+    // void addModification(
+    //     const std::string& operation,
+    //     const int& targetId = 0,
+    //     const std::string& title = "",
+    //     const std::string& description = "",
+    //     const std::string& dueDate = "",
+    //     const int& deleteFlag = 0,
+    //     const int& completeFlag = 0
+    // );
 
-    std::vector<Modification> getModificationsAfterId(const int& lastProcessedId);
+    // std::vector<Modification> getModificationsAfterId(const int& lastProcessedId);
 
 private:
     SQLite::Database db;
