@@ -2,6 +2,6 @@
     "type": "modification",
     "content": {
         "operation": "delete",
-        "target_id": 12345
+        "target_id": "20240615093000123"
     }
 }

@@ -1,7 +1,0 @@
-{
-    "type": "modification",
-    "content": {
-        "operation": "uncomplete",
-        "target_id": 12345
-    }
-}

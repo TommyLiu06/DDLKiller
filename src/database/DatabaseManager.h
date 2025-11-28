@@ -31,6 +31,9 @@ public:
     //     const int& completeFlag = 0
     // );
 
+    void addTodoItem(const TodoItem& item);
+    void deleteTodoItem(const std::string& uuid);
+
     std::vector<TodoItem> getTodoItems();
 
 private:
