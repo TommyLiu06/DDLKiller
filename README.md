@@ -5,23 +5,13 @@
 ### 1. Install Requirements
 
 ```bash
-# 0. Update system
 sudo apt update && sudo apt upgrade
 
-# 1. Development tools
-sudo apt install build-essential cmake
-
-# 2. Boost
-sudo apt install libboost-all-dev
-
-# 3. SQLite3
-sudo apt install sqlite3 libsqlite3-dev
-
-# 4. SQLiteCpp
-sudo apt install libsqlitecpp-dev
-
-# 5. nlohmann-json
-sudo apt install nlohmann-json3-dev
+sudo apt install build-essential cmake \  # Build tools
+                    libboost-all-dev \  # Boost libraries
+                    sqlite3 libsqlite3-dev \  # SQLite3
+                    libsqlitecpp-dev \  # SQLiteCpp
+                    nlohmann-json3-dev  # nlohmann-json
 ```
 
 ### 2. Build
