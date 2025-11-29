@@ -9,6 +9,9 @@ find_package(nlohmann_json REQUIRED)
 
 add_executable(ddl_sync_server
     src/main.cpp
+    src/database/DatabaseManager.cpp
+    src/json/JsonParser.cpp
+    src/json/JsonSender.cpp
     src/websocket/WebSocketServer.cpp
     src/websocket/WebSocketSession.cpp
 )

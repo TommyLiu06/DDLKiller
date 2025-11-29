@@ -35,7 +35,15 @@ example:
 ./ws_server 8090 /opt/ddl_sync_server/ddl_sync.db
 ```
 
-### 4. Systemd Service (optional)
+### 4. Config Systemd Service (optional)
+
+Replace `$DDL_SERVER_PORT` and `$DDL_DATABASE_PATH` in the service file `ddl_sync_server.service` accordingly:
+
+```
+
+```
+
+Then run:
 
 ```bash
 sudo cp ../ddl_sync_server.service /etc/systemd/system/ddl_sync_server.service
@@ -58,7 +66,26 @@ sudo apt install nodejs npm
 npm install wscat
 ```
 
-### 2. Run test
+### 2. Connect Server
+
 ```bash
 wscat -c ws://localhost:<port>
+```
+
+### 3. Send Test Message
+
+```json
+{"type":"modification","content":{"operation":"add","uuid":"20240615093000123","title":"Example Title","description":"This is an example description.","due_date":"2024-12-31"}}
+```
+
+and you should see the response messages:
+
+```json
+# On source client
+{"content":{"status":"success"},"type":"response"}
+```
+
+```json
+# On other clients
+{"type":"modification","content":{"operation":"add","uuid":"20240615093000123","title":"Example Title","description":"This is an example description.","due_date":"2024-12-31"}}
 ```
