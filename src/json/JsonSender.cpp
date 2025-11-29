@@ -1,0 +1,20 @@
+#include "JsonSender.h"
+
+std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& items) {
+    nlohmann::json jsonObj;
+    jsonObj["type"] = "full_update";
+    jsonObj["content"] = nlohmann::json::array();
+
+    for (const auto& item : items) {
+        nlohmann::json itemJson;
+        itemJson["uuid"] = item.uuid;
+        itemJson["last_modified"] = item.lastModified;
+        itemJson["title"] = item.title;
+        itemJson["description"] = item.description;
+        itemJson["due_date"] = item.dueDate;
+        itemJson["complete_flag"] = item.completeFlag;
+        jsonObj["content"].push_back(itemJson);
+    }
+
+    return jsonObj.dump();
+}

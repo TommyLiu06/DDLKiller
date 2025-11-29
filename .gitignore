@@ -9,5 +9,9 @@ package.json
 # Build
 build/
 
+# Tests
+*.exec
+*.db
+
 # Tools
 line_counter.py

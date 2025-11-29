@@ -1,10 +1,11 @@
 #include "WebSocketSession.h"
 #include "WebSocketServer.h"
+#include "../json/JsonParser.h"
+#include "../json/JsonSender.h"
 
 WebSocketSession::WebSocketSession(tcp::socket socket, WebSocketServer* server)
     : ws_(std::move(socket)), server_(server)
-{
-}
+{}
 
 void WebSocketSession::start()
 {
@@ -40,8 +41,51 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
     std::string msg = boost::beast::buffers_to_string(buffer->data());
     delete buffer;
 
-    // 广播给所有客户端
-    server_->broadcast(msg, shared_from_this());
+    // 解析 json
+    std::string msgType = JsonParser::getMessageType(msg);
+
+    // 处理不同类型的消息
+    if (msgType == "modification") {
+        std::string modType = JsonParser::getModificationType(msg);
+        if (modType == "add") {
+            AddOperation op = JsonParser::parseAddOperation(msg);
+            TodoItem item;
+            item.uuid = op.uuid;
+            item.lastModified = op.uuid; // 使用 uuid 作为创建时间戳
+            item.title = op.title;
+            item.description = op.description;
+            item.dueDate = op.dueDate;
+            item.completeFlag = 0;
+            server_->dbManager.addTodoItem(item);
+
+        } else if (modType == "delete") {
+            DeleteOperation op = JsonParser::parseDeleteOperation(msg);
+            server_->dbManager.deleteTodoItem(op.targetUuid);
+
+        } else if (modType == "modify") {
+            ModifyOperation op = JsonParser::parseModifyOperation(msg);
+            TodoItem item;
+            item.uuid = op.targetUuid;
+            item.lastModified = op.lastModified;
+            item.title = op.title;
+            item.description = op.description;
+            item.dueDate = op.dueDate;
+            item.completeFlag = op.completeFlag;
+            server_->dbManager.moidfyTodoItem(item);
+        }
+
+        // 对于修改消息，直接广播
+        server_->broadcast(msg, shared_from_this());
+
+    } else if (msgType == "full_update") {
+        std::vector<TodoItem> items = JsonParser::parseTodoItems(msg);
+        server_->dbManager.updateTodoItems(items);
+
+        // 对于全量更新消息，广播修改后的的完整列表
+        std::vector<TodoItem> updatedItems = server_->dbManager.getTodoItems();
+        std::string fullUpdateMsg = JsonSender::createFullUpdateMessage(updatedItems);
+        server_->broadcast(fullUpdateMsg);
+    }
 
     // 继续读下一条消息
     do_read();

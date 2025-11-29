@@ -6,19 +6,11 @@ int main(int argc, char* argv[])
 {
     if (argc == 3) {
         unsigned short port = static_cast<unsigned short>(std::stoi(argv[1]));
-        std::string dbPath = argv[2];
-
-        // Initialize DatabaseManager singleton
-        // try {
-        //     DatabaseManager::getInstance(dbPath);
-        // } catch (const std::exception& e) {
-        //     std::cerr << "Fatal: " << e.what() << "\n";
-        //     return 1;
-        // }
+        const char* dbPath = argv[2];
 
         try {
             boost::asio::io_context ioc;
-            WebSocketServer server(ioc, port);
+            WebSocketServer server(ioc, port, dbPath);
 
             std::cout << "Server started at ws://localhost:" << port << "\n";
 

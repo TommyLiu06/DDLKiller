@@ -6,13 +6,15 @@
 #include <memory>
 #include <string>
 #include "WebSocketSession.h"
+#include "../database/DatabaseManager.h"
 
 class WebSocketServer
 {
 public:
     using tcp = boost::asio::ip::tcp;
 
-    WebSocketServer(boost::asio::io_context& ioc, unsigned short port);
+    WebSocketServer(boost::asio::io_context& ioc, unsigned short port, const char* dbPath);
+    DatabaseManager dbManager;
 
     // 启动监听
     void run();

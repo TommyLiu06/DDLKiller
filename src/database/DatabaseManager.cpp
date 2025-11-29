@@ -1,16 +1,13 @@
 /**
- * @file DatabaseManager.cpp
- * @brief Implementation of the DatabaseManager class.
- *
  * Build：
  *   g++ DatabaseManager.cpp TestDatabase.cpp \
  *       -lSQLiteCpp -lsqlite3 -lpthread -std=c++17 \
- *       -o TestDatabase
+ *       -o TestDatabase.exec
  */
-
 
 #include "DatabaseManager.h"
 #include <stdexcept>
+#include <unordered_set>
 
 DatabaseManager::DatabaseManager(const char* dbPath)
     : db(dbPath, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
@@ -31,6 +28,40 @@ DatabaseManager::DatabaseManager(const char* dbPath)
     } catch (const std::exception& e) {
         throw std::runtime_error(std::string("Failed to open database: ") + e.what());
     }
+}
+
+void DatabaseManager::updateTodoItems(const std::vector<TodoItem>& clientTodoItems) {
+    std::vector<TodoItem> serverTodoItems = getTodoItems();
+
+    // 找出客户端有但服务器没有的项，添加到服务器
+    std::vector<TodoItem> itemsToAdd = getUnique(clientTodoItems, serverTodoItems);
+    for (const auto& item : itemsToAdd) {
+        addTodoItem(item);
+    }
+
+    // 找出服务器有但客户端没有的项，从服务器删除
+    std::vector<TodoItem> itemsToDelete = getUnique(serverTodoItems, clientTodoItems);
+    for (const auto& item : itemsToDelete) {
+        deleteTodoItem(item.uuid);
+    }
+}
+
+std::vector<TodoItem> DatabaseManager::getUnique(const std::vector<TodoItem>& source,
+                                                    const std::vector<TodoItem>& exclude)
+{
+    std::vector<TodoItem> uniqueItems;
+
+    std::unordered_set<std::string> excludeSet;
+    for (const auto& item : exclude)
+        excludeSet.insert(item.uuid);
+
+    for (const auto& item : source) {
+        if (excludeSet.find(item.uuid) == excludeSet.end()) {
+            uniqueItems.push_back(item); // only in A
+        }
+    }
+
+    return uniqueItems;
 }
 
 void DatabaseManager::addTodoItem(const TodoItem& item) {
@@ -65,6 +96,24 @@ void DatabaseManager::deleteTodoItem(const std::string& uuid) {
     deleteStmt.reset();
 }
 
+void DatabaseManager::moidfyTodoItem(const TodoItem& item) {
+    SQLite::Statement updateStmt(db, 
+        "UPDATE items SET last_modified = ?, title = ?, description = ?, due_date = ?, complete_flag = ? "
+        "WHERE uuid = ?"
+    );
+
+    updateStmt.bind(1, item.lastModified);
+    updateStmt.bind(2, item.title);
+    updateStmt.bind(3, item.description);
+    updateStmt.bind(4, item.dueDate);
+    updateStmt.bind(5, item.completeFlag);
+    updateStmt.bind(6, item.uuid);
+
+    if (updateStmt.exec() != 1) {
+        throw std::runtime_error("Failed to modify todo item");
+    }
+    updateStmt.reset();
+}
 
 std::vector<TodoItem> DatabaseManager::getTodoItems() {
     SQLite::Statement selectStmt(db, 

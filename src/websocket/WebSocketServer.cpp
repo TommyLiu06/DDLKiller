@@ -1,8 +1,9 @@
 #include "WebSocketServer.h"
 #include "WebSocketSession.h"
 
-WebSocketServer::WebSocketServer(boost::asio::io_context& ioc, unsigned short port)
-    : acceptor_(ioc, tcp::endpoint(tcp::v4(), port))
+WebSocketServer::WebSocketServer(boost::asio::io_context& ioc, unsigned short port, const char* dbPath)
+    : acceptor_(ioc, tcp::endpoint(tcp::v4(), port)),
+        dbManager(dbPath)
 {}
 
 void WebSocketServer::run()

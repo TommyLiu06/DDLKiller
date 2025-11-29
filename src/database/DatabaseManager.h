@@ -20,15 +20,18 @@ public:
     // SQLite::Database 不可拷贝
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
-
+    
     void addTodoItem(const TodoItem& item);
     void deleteTodoItem(const std::string& uuid);
+    void moidfyTodoItem(const TodoItem& item);
+    
+    void updateTodoItems(const std::vector<TodoItem>& clientTodoItems);
     std::vector<TodoItem> getTodoItems();
 
 private:
     SQLite::Database db;
-    // SQLite::Statement insertStmt;
-    // SQLite::Statement selectStmt;
-    // SQLite::Statement deleteStmt;
 
+    std::vector<TodoItem> getUnique(const std::vector<TodoItem>& source,
+                                    const std::vector<TodoItem>& exclude);
+    
 };

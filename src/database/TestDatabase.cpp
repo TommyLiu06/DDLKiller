@@ -1,3 +1,10 @@
+/*
+ * Build:
+ *   g++ DatabaseManager.cpp TestDatabase.cpp \
+ *       -lSQLiteCpp -lsqlite3 -std=c++17 \
+ *       -o TestDatabase.exec
+ */
+
 #include "DatabaseManager.h"
 #include <iostream>
 
