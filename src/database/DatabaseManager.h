@@ -33,5 +33,7 @@ private:
 
     std::vector<TodoItem> getUnique(const std::vector<TodoItem>& source,
                                     const std::vector<TodoItem>& exclude);
+    std::vector<TodoItem> getCommon(const std::vector<TodoItem>& clientItems,
+                                    const std::vector<TodoItem>& serverItems);
     
 };

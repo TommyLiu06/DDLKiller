@@ -44,6 +44,18 @@ void DatabaseManager::updateTodoItems(const std::vector<TodoItem>& clientTodoIte
     for (const auto& item : itemsToDelete) {
         deleteTodoItem(item.uuid);
     }
+
+    // 找出双方都有的项，在服务器上保存修改时间较新的版本
+    std::vector<TodoItem> clientCommonItems = getCommon(clientTodoItems, serverTodoItems);
+    std::vector<TodoItem> serverCommonItems = getCommon(serverTodoItems, clientTodoItems);
+
+    for (size_t i = 0; i < clientCommonItems.size(); ++i) {
+        const TodoItem& clientItem = clientCommonItems[i];
+        const TodoItem& serverItem = serverCommonItems[i];
+        if (clientItem.lastModified > serverItem.lastModified) {
+            moidfyTodoItem(clientItem);
+        }
+    }
 }
 
 std::vector<TodoItem> DatabaseManager::getUnique(const std::vector<TodoItem>& source,
@@ -57,11 +69,29 @@ std::vector<TodoItem> DatabaseManager::getUnique(const std::vector<TodoItem>& so
 
     for (const auto& item : source) {
         if (excludeSet.find(item.uuid) == excludeSet.end()) {
-            uniqueItems.push_back(item); // only in A
+            uniqueItems.push_back(item); // only in source
         }
     }
 
     return uniqueItems;
+}
+
+std::vector<TodoItem> DatabaseManager::getCommon(const std::vector<TodoItem>& clientItems,
+                                                    const std::vector<TodoItem>& serverItems)
+{
+    std::vector<TodoItem> commonItems;
+
+    std::unordered_set<std::string> bSet;
+    for (const auto& item : serverItems)
+        bSet.insert(item.uuid);
+
+    for (const auto& item : clientItems) {
+        if (bSet.find(item.uuid) != bSet.end()) {
+            commonItems.push_back(item); // in both client and server
+        }
+    }
+
+    return commonItems;
 }
 
 void DatabaseManager::addTodoItem(const TodoItem& item) {
@@ -77,9 +107,12 @@ void DatabaseManager::addTodoItem(const TodoItem& item) {
     insertStmt.bind(5, item.dueDate);
     insertStmt.bind(6, item.completeFlag);
 
-    if (insertStmt.exec() != 1) {
-        throw std::runtime_error("Failed to add todo item");
+    try {
+        insertStmt.exec();
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("Failed to add todo item: ") + e.what());
     }
+
     insertStmt.reset();
 }
 
@@ -90,29 +123,35 @@ void DatabaseManager::deleteTodoItem(const std::string& uuid) {
 
     deleteStmt.bind(1, uuid);
 
-    if (deleteStmt.exec() != 1) {
-        throw std::runtime_error("Failed to delete todo item");
+    try {
+        deleteStmt.exec();
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("Failed to delete todo item: ") + e.what());
     }
+
     deleteStmt.reset();
 }
 
 void DatabaseManager::moidfyTodoItem(const TodoItem& item) {
-    SQLite::Statement updateStmt(db, 
+    SQLite::Statement modifyStmt(db, 
         "UPDATE items SET last_modified = ?, title = ?, description = ?, due_date = ?, complete_flag = ? "
         "WHERE uuid = ?"
     );
 
-    updateStmt.bind(1, item.lastModified);
-    updateStmt.bind(2, item.title);
-    updateStmt.bind(3, item.description);
-    updateStmt.bind(4, item.dueDate);
-    updateStmt.bind(5, item.completeFlag);
-    updateStmt.bind(6, item.uuid);
+    modifyStmt.bind(1, item.lastModified);
+    modifyStmt.bind(2, item.title);
+    modifyStmt.bind(3, item.description);
+    modifyStmt.bind(4, item.dueDate);
+    modifyStmt.bind(5, item.completeFlag);
+    modifyStmt.bind(6, item.uuid);
 
-    if (updateStmt.exec() != 1) {
-        throw std::runtime_error("Failed to modify todo item");
+    try {
+        modifyStmt.exec();
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("Failed to modify todo item: ") + e.what());
     }
-    updateStmt.reset();
+
+    modifyStmt.reset();
 }
 
 std::vector<TodoItem> DatabaseManager::getTodoItems() {
