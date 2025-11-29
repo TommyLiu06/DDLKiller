@@ -36,7 +36,7 @@ int main() {
                     << "Description: " << item.description << "\n"
                     << "Due Date: " << item.dueDate << "\n"
                     << "Complete Flag: " << item.completeFlag << "\n"
-                    << "------------------------\n";
+                    << "-------------------------\n";
     }
 
     // Delete a TodoItem
@@ -53,7 +53,7 @@ int main() {
                     << "Description: " << item.description << "\n"
                     << "Due Date: " << item.dueDate << "\n"
                     << "Complete Flag: " << item.completeFlag << "\n"
-                    << "------------------------\n";
+                    << "-------------------------\n";
     }
 
 }

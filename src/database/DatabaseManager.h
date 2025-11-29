@@ -15,30 +15,20 @@ struct TodoItem {
 
 class DatabaseManager {
 public:
-    DatabaseManager(const std::string& dbPath);
+    DatabaseManager(const char* dbPath);
 
     // SQLite::Database 不可拷贝
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
 
-    // void addModification(
-    //     const std::string& operation,
-    //     const int& targetId = 0,
-    //     const std::string& title = "",
-    //     const std::string& description = "",
-    //     const std::string& dueDate = "",
-    //     const int& deleteFlag = 0,
-    //     const int& completeFlag = 0
-    // );
-
     void addTodoItem(const TodoItem& item);
     void deleteTodoItem(const std::string& uuid);
-
     std::vector<TodoItem> getTodoItems();
 
 private:
     SQLite::Database db;
-    SQLite::Statement insert;
-    SQLite::Statement select;
+    // SQLite::Statement insertStmt;
+    // SQLite::Statement selectStmt;
+    // SQLite::Statement deleteStmt;
 
 };
