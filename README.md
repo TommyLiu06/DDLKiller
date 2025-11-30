@@ -23,16 +23,18 @@ cmake ..
 make -j$(nproc)
 ```
 
+NOTICE: If you are building on devices with low memory (<=2GB), consider using `make -j1` to avoid out-of-memory errors.
+
 ### 3. Run Server
 
 ```bash
-./ws_server <port> <database_path>
+./ddl_sync_server <port> <database_path>
 ```
 
 example:
 
 ```bash
-./ws_server 8090 /opt/ddl_sync_server/ddl_sync.db
+./ddl_sync_server 8090 /opt/ddl_sync_server/ddl_sync.db
 ```
 
 ### 4. Config Systemd Service (optional)
