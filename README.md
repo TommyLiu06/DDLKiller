@@ -82,12 +82,13 @@ wscat -c ws://localhost:<port>
 
 and you should see the response messages:
 
-```json
-# On source client
+On source client:
+```json 
 {"content":{"status":"success"},"type":"response"}
 ```
 
+On other clients:
+
 ```json
-# On other clients
 {"type":"modification","content":{"operation":"add","uuid":"20240615093000123","title":"Example Title","description":"This is an example description.","due_date":"2024-12-31"}}
 ```
