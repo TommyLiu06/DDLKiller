@@ -1,3 +1,4 @@
+#include <iostream>
 #include "WebSocketSession.h"
 #include "WebSocketServer.h"
 #include "../json/JsonParser.h"
@@ -72,6 +73,10 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
             item.dueDate = op.dueDate;
             item.completeFlag = op.completeFlag;
             server_->dbManager.moidfyTodoItem(item);
+
+        } else {
+            std::cerr << "Unknown modification type: " << modType << std::endl;
+            return;
         }
 
         // 对于修改消息，直接广播
@@ -85,6 +90,10 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
         std::vector<TodoItem> updatedItems = server_->dbManager.getTodoItems();
         std::string fullUpdateMsg = JsonSender::createFullUpdateMessage(updatedItems);
         server_->broadcast(fullUpdateMsg, shared_from_this());
+
+    } else {
+        // 其他类型的消息，暂不处理
+        std::cerr << "Unknown message type: " << msgType << std::endl;
     }
 
     // 继续读下一条消息
