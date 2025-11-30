@@ -39,19 +39,24 @@ example:
 
 ### 4. Config Systemd Service (optional)
 
-Replace `$DDL_SERVER_PORT` and `$DDL_DATABASE_PATH` in the service file `ddl_sync_server.service` accordingly:
-
-```
-
-```
-
-Then run:
+Run:
 
 ```bash
-sudo cp ../ddl_sync_server.service /etc/systemd/system/ddl_sync_server.service
-sudo systemctl daemon-reload
-sudo systemctl enable ddl_sync_server.service
-sudo systemctl start ddl_sync_server.service
+cd ..
+sudo ./install_service.sh <port>
+```
+
+The service file will be created at `/etc/systemd/system/ddl_sync_server.service`.
+
+The binary file will be copied to `/opt/ddl_sync_server/ddl_sync_server`.
+
+The default database path is `/opt/ddl_sync_server/ddl_sync.db`.
+
+Then enable and start the service:
+
+```bash
+sudo systemctl enable ddl_sync_server
+sudo systemctl start ddl_sync_server
 ```
 
 ## Local test
