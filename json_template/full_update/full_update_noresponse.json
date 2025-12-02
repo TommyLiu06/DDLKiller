@@ -1,5 +1,5 @@
 {
-    "type": "force_full_update",
+    "type": "full_update_noresponse",
     "content": [
         {
             "uuid": "20251129001659123",

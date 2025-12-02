@@ -1,8 +1,8 @@
 #include "JsonSender.h"
 
-std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& items, const bool& force) {
+std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& items, const bool& noresponse) {
     nlohmann::json jsonObj;
-    jsonObj["type"] = force ? "force_full_update" : "full_update";
+    jsonObj["type"] = noresponse ? "full_update_noresponse" : "full_update";
     jsonObj["content"] = nlohmann::json::array();
 
     for (const auto& item : items) {

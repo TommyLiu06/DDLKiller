@@ -93,7 +93,7 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
         std::vector<TodoItem> items = JsonParser::parseTodoItems(msg);
         server_->dbManager.updateTodoItems(items);
 
-        // 对除消息源以外的所有客户端广播修改后的的完整列表
+        // 对除消息源以外的所有客户端广播修改后的的完整列表，不要求回复
         std::vector<TodoItem> updatedItems = server_->dbManager.getTodoItems();
         std::string fullUpdateMsg = JsonSender::createFullUpdateMessage(updatedItems, true);
         server_->broadcast(fullUpdateMsg, shared_from_this());
