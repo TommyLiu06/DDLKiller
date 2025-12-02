@@ -1,18 +1,13 @@
-/**
- * Build：
- *   g++ DatabaseManager.cpp TestDatabase.cpp \
- *       -lSQLiteCpp -lsqlite3 -lpthread -std=c++17 \
- *       -o TestDatabase.exec
- */
-
 #include "DatabaseManager.h"
 #include <stdexcept>
 #include <unordered_set>
 
 DatabaseManager::DatabaseManager(const char* dbPath)
+    // 打开数据库文件，若不存在就创建
     : db(dbPath, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE)
 {
     try {
+        // 创建 item 表（若不存在）
         db.exec(
             "CREATE TABLE IF NOT EXISTS items ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -30,7 +25,8 @@ DatabaseManager::DatabaseManager(const char* dbPath)
     }
 }
 
-void DatabaseManager::updateTodoItems(const std::vector<TodoItem>& clientTodoItems) {
+void DatabaseManager::updateTodoItems(const std::vector<TodoItem>& clientTodoItems)
+{
     std::vector<TodoItem> serverTodoItems = getTodoItems();
 
     // 找出客户端有但服务器没有的项，添加到服务器
@@ -63,12 +59,14 @@ std::vector<TodoItem> DatabaseManager::getUnique(const std::vector<TodoItem>& so
 {
     std::vector<TodoItem> uniqueItems;
 
+    // 将 exclude 中所有项的 uuid 添加到 unordered_set (unordered_set 查找的时间复杂度为 O(1))
     std::unordered_set<std::string> excludeSet;
     for (const auto& item : exclude)
         excludeSet.insert(item.uuid);
 
+    // 对于 source 中的每一项, 如果没有在 exclude 中找到相同的 uuid, 则这一项是 source 独有的
     for (const auto& item : source) {
-        if (excludeSet.find(item.uuid) == excludeSet.end()) {
+        if (excludeSet.find(item.uuid) == excludeSet.end()) {  // 没有找到时返回 excludeSet.end()
             uniqueItems.push_back(item); // only in source
         }
     }
@@ -76,18 +74,20 @@ std::vector<TodoItem> DatabaseManager::getUnique(const std::vector<TodoItem>& so
     return uniqueItems;
 }
 
-std::vector<TodoItem> DatabaseManager::getCommon(const std::vector<TodoItem>& clientItems,
-                                                    const std::vector<TodoItem>& serverItems)
+std::vector<TodoItem> DatabaseManager::getCommon(const std::vector<TodoItem>& aItems,
+                                                    const std::vector<TodoItem>& bItems)
 {
     std::vector<TodoItem> commonItems;
 
+    // 将 bItems 中所有项的 uuid 添加到 unordered_set (unordered_set 查找的时间复杂度为 O(1))
     std::unordered_set<std::string> bSet;
-    for (const auto& item : serverItems)
+    for (const auto& item : bItems)
         bSet.insert(item.uuid);
 
-    for (const auto& item : clientItems) {
-        if (bSet.find(item.uuid) != bSet.end()) {
-            commonItems.push_back(item); // in both client and server
+    // 对于 aItem 中的每一项, 如果在 bItem 中找到相同的 uuid, 则这一项是共有的
+    for (const auto& item : aItems) {
+        if (bSet.find(item.uuid) != bSet.end()) {  // 找到时会返回位置, 所以用 != bSet.end() 判断
+            commonItems.push_back(item); // in both a and b
         }
     }
 
