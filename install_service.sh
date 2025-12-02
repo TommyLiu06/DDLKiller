@@ -94,7 +94,7 @@ Type=simple
 Environment="DDL_SYNC_PORT=${PORT}"
 Environment="DDL_SYNC_DB=${DB_PATH}"
 ExecStart=${DEST_DIR}/ddl_sync_server \${DDL_SYNC_PORT} \${DDL_SYNC_DB}
-Restart=on-failure
+Restart=always
 WorkingDirectory=${DEST_DIR}
 User=root
 StandardOutput=syslog
