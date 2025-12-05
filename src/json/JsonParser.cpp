@@ -30,7 +30,7 @@ ModifyOperation JsonParser::parseModifyOperation(const std::string& jsonStr) {
     op.title = jsonObj["content"]["title"].get<std::string>();
     op.description = jsonObj["content"]["description"].get<std::string>();
     op.dueDate = jsonObj["content"]["due_date"].get<std::string>();
-    op.completeFlag = jsonObj["content"]["complete_flag"].get<int>();
+    op.completeFlag = jsonObj["content"]["complete_flag"].get<bool>();
     return op;
 }
 
