@@ -94,7 +94,8 @@ std::vector<TodoItem> DatabaseManager::getCommon(const std::vector<TodoItem>& aI
     return commonItems;
 }
 
-void DatabaseManager::addTodoItem(const TodoItem& item) {
+void DatabaseManager::addTodoItem(const TodoItem& item)
+{
     SQLite::Statement insertStmt(db, 
         "INSERT INTO items (uuid, last_modified, title, description, due_date, complete_flag) "
         "VALUES (?, ?, ?, ?, ?, ?)"
@@ -116,7 +117,8 @@ void DatabaseManager::addTodoItem(const TodoItem& item) {
     insertStmt.reset();
 }
 
-void DatabaseManager::deleteTodoItem(const std::string& uuid) {
+void DatabaseManager::deleteTodoItem(const std::string& uuid)
+{
     SQLite::Statement deleteStmt(db, 
         "DELETE FROM items WHERE uuid = ?"
     );
@@ -132,7 +134,8 @@ void DatabaseManager::deleteTodoItem(const std::string& uuid) {
     deleteStmt.reset();
 }
 
-void DatabaseManager::moidfyTodoItem(const TodoItem& item) {
+void DatabaseManager::moidfyTodoItem(const TodoItem& item)
+{
     SQLite::Statement modifyStmt(db, 
         "UPDATE items SET last_modified = ?, title = ?, description = ?, due_date = ?, complete_flag = ? "
         "WHERE uuid = ?"
@@ -154,7 +157,8 @@ void DatabaseManager::moidfyTodoItem(const TodoItem& item) {
     modifyStmt.reset();
 }
 
-std::vector<TodoItem> DatabaseManager::getTodoItems() {
+std::vector<TodoItem> DatabaseManager::getTodoItems()
+{
     SQLite::Statement selectStmt(db, 
         "SELECT uuid, last_modified, title, description, due_date, complete_flag FROM items"
     );

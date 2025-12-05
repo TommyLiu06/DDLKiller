@@ -33,7 +33,7 @@ public:
     // 从客户端发送的列表全量更新服务器数据库
     void updateTodoItems(const std::vector<TodoItem>& clientTodoItems);
 
-    // 从服务器数据库获取列表
+    // 从服务器数据库获取待办事项列表
     std::vector<TodoItem> getTodoItems();
 
 private:

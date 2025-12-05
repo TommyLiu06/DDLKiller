@@ -22,7 +22,8 @@ std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& ite
 std::string JsonSender::createSuccessMessage(const std::string& operationType, const std::string& uuid) {
     nlohmann::json jsonObj;
     jsonObj["type"] = "response";
-    
+
+    // 若指定了修改操作的类型，则需要返回包含该操作和目标 uuid 的成功信息
     if (!operationType.empty()) {
         jsonObj["content"] = {
             {"operation", operationType},

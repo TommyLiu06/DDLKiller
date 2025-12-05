@@ -1,11 +1,13 @@
 #include "JsonParser.h"
 
-std::string JsonParser::getModificationType(const std::string& jsonStr) {
+std::string JsonParser::getModificationType(const std::string& jsonStr)
+{
     auto jsonObj = nlohmann::json::parse(jsonStr);
     return jsonObj["content"]["operation"].get<std::string>();
 }
 
-AddOperation JsonParser::parseAddOperation(const std::string& jsonStr) {
+AddOperation JsonParser::parseAddOperation(const std::string& jsonStr)
+{
     auto jsonObj = nlohmann::json::parse(jsonStr);
     AddOperation op;
     op.uuid = jsonObj["content"]["uuid"].get<std::string>();
@@ -15,14 +17,16 @@ AddOperation JsonParser::parseAddOperation(const std::string& jsonStr) {
     return op;
 }
 
-DeleteOperation JsonParser::parseDeleteOperation(const std::string& jsonStr) {
+DeleteOperation JsonParser::parseDeleteOperation(const std::string& jsonStr)
+{
     auto jsonObj = nlohmann::json::parse(jsonStr);
     DeleteOperation op;
     op.targetUuid = jsonObj["content"]["target_uuid"].get<std::string>();
     return op;
 }
 
-ModifyOperation JsonParser::parseModifyOperation(const std::string& jsonStr) {
+ModifyOperation JsonParser::parseModifyOperation(const std::string& jsonStr)
+{
     auto jsonObj = nlohmann::json::parse(jsonStr);
     ModifyOperation op;
     op.targetUuid = jsonObj["content"]["target_uuid"].get<std::string>();
@@ -34,7 +38,8 @@ ModifyOperation JsonParser::parseModifyOperation(const std::string& jsonStr) {
     return op;
 }
 
-std::string JsonParser::getMessageType(const std::string& jsonStr) {
+std::string JsonParser::getMessageType(const std::string& jsonStr)
+{
     try {
         auto jsonObj = nlohmann::json::parse(jsonStr);
         return jsonObj["type"].get<std::string>();
@@ -44,7 +49,8 @@ std::string JsonParser::getMessageType(const std::string& jsonStr) {
     }
 }
 
-std::vector<TodoItem> JsonParser::parseTodoItems(const std::string& jsonStr) {
+std::vector<TodoItem> JsonParser::parseTodoItems(const std::string& jsonStr)
+{
     std::vector<TodoItem> items;
     auto jsonObj = nlohmann::json::parse(jsonStr);
     for (const auto& itemJson : jsonObj["content"]) {
