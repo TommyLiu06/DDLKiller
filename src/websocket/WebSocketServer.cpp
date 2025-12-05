@@ -1,3 +1,4 @@
+#include <iostream>
 #include "WebSocketServer.h"
 #include "WebSocketSession.h"
 #include "../json/JsonSender.h"
@@ -15,13 +16,26 @@ void WebSocketServer::run()
 void WebSocketServer::do_accept()
 {
     acceptor_.async_accept(
-        [this](boost::system::error_code ec, tcp::socket socket)
-        {
-            if (!ec) {
-                auto session = std::make_shared<WebSocketSession>(std::move(socket), this);
-                session->start();
+        [this](boost::system::error_code ec, tcp::socket socket) {
+            try {
+                if (!ec) {
+                    auto session = std::make_shared<WebSocketSession>(
+                        std::move(socket), this);
+                    session->start();
+                } else {
+                    // 连接错误
+                    std::cerr << "Accept error: " << ec.message() << std::endl;
+                }
+                
+            } catch (const std::exception& e) {
+                std::cerr << "Exception in accept handler: " << e.what() << std::endl;
+                
+            } catch (...) {
+                std::cerr << "Unknown exception in accept handler" << std::endl;
             }
-            do_accept();  // 接受下一个
+            
+            // 继续接受下一个连接
+            do_accept();
         });
 }
 
