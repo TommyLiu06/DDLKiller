@@ -24,7 +24,8 @@ struct ModifyOperation {
     int completeFlag;
 };
 
-class JsonParser {
+class JsonParser
+{
 public:
     // 获取消息类型
     static std::string getMessageType(const std::string& jsonStr);

@@ -13,12 +13,15 @@ struct TodoItem {
     int completeFlag;          // 待办事项是否完成标识
 };
 
-class DatabaseManager {
+class DatabaseManager
+{
 public:
     DatabaseManager(const char* dbPath);
 
     // SQLite::Database 不可拷贝
     DatabaseManager(const DatabaseManager&) = delete;
+
+    // SQLite::Database 不可赋值
     DatabaseManager& operator=(const DatabaseManager&) = delete;
     
     // 在服务器数据库添加 item

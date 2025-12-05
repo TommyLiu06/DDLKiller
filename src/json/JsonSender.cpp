@@ -1,6 +1,7 @@
 #include "JsonSender.h"
 
-std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& items, const bool& noresponse) {
+std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& items, const bool& noresponse)
+{
     nlohmann::json jsonObj;
     jsonObj["type"] = noresponse ? "full_update_noresponse" : "full_update";
     jsonObj["content"] = nlohmann::json::array();
@@ -19,7 +20,8 @@ std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& ite
     return jsonObj.dump();
 }
 
-std::string JsonSender::createSuccessMessage(const std::string& operationType, const std::string& uuid) {
+std::string JsonSender::createSuccessMessage(const std::string& operationType, const std::string& uuid)
+{
     nlohmann::json jsonObj;
     jsonObj["type"] = "response";
 
