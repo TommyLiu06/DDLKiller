@@ -54,7 +54,7 @@ std::vector<TodoItem> JsonParser::parseTodoItems(const std::string& jsonStr) {
         item.title = itemJson["title"].get<std::string>();
         item.description = itemJson["description"].get<std::string>();
         item.dueDate = itemJson["due_date"].get<std::string>();
-        item.completeFlag = itemJson["complete_flag"].get<int>();
+        item.completeFlag = itemJson["complete_flag"].get<bool>();
         items.push_back(item);
     }
     return items;
