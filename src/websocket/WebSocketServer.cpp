@@ -37,14 +37,17 @@ void WebSocketServer::removeClient(std::shared_ptr<WebSocketSession> client)
     clients_.erase(client);
 }
 
-void WebSocketServer::broadcast(const std::string& msg, const std::shared_ptr<WebSocketSession>& exclude)
+void WebSocketServer::broadcast(const std::string& msg,
+                                const std::shared_ptr<WebSocketSession>& source,
+                                const std::string& operationType,
+                                const std::string& uuid)
 {
     std::lock_guard<std::mutex> lock(clients_mutex_);
 
     for (auto& client : clients_) {
         if (client) {
-            if (client == exclude) {
-                std::string successMsg = JsonSender::createSuccessMessage();
+            if (client == source) {
+                std::string successMsg = JsonSender::createSuccessMessage(operationType, uuid);
                 try {
                     client->send(successMsg);  // 发送成功响应
                 } catch (...) {

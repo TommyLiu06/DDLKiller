@@ -48,8 +48,10 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
     // 处理不同类型的消息
     if (msgType == "modification") {
         std::string modType = JsonParser::getModificationType(msg);
+
         if (modType == "add") {
             AddOperation op = JsonParser::parseAddOperation(msg);
+
             TodoItem item;
             item.uuid = op.uuid;
             item.lastModified = op.uuid; // 使用 uuid 作为创建时间戳
@@ -57,12 +59,14 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
             item.description = op.description;
             item.dueDate = op.dueDate;
             item.completeFlag = 0;
+            server_->broadcast(msg, shared_from_this(), modType, op.uuid);
             server_->dbManager.addTodoItem(item);
 
         } else if (modType == "delete") {
             DeleteOperation op = JsonParser::parseDeleteOperation(msg);
+            server_->broadcast(msg, shared_from_this(), modType, op.targetUuid);
             server_->dbManager.deleteTodoItem(op.targetUuid);
-
+            
         } else if (modType == "modify") {
             ModifyOperation op = JsonParser::parseModifyOperation(msg);
             TodoItem item;
@@ -73,14 +77,13 @@ void WebSocketSession::on_read(beast::error_code ec, std::size_t, beast::flat_bu
             item.dueDate = op.dueDate;
             item.completeFlag = op.completeFlag;
             server_->dbManager.moidfyTodoItem(item);
+            // 对于修改消息，直接广播
+            server_->broadcast(msg, shared_from_this());
 
         } else {
             std::cerr << "Unknown modification type: " << modType << std::endl;
             return;
         }
-
-        // 对于修改消息，直接广播
-        server_->broadcast(msg, shared_from_this());
 
     } else if (msgType == "full_update_request") {
         // 获取当前服务器列表并发送给请求更新的客户端

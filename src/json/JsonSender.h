@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "JsonParser.h"
 
 class JsonSender {
@@ -8,5 +9,5 @@ public:
     static std::string createFullUpdateMessage(const std::vector<TodoItem>& items, const bool& noresponse = false);
 
     // 创建成功返回消息
-    static std::string createSuccessMessage();
+    static std::string createSuccessMessage(const std::string& operationType = "", const std::string& uuid = "");
 };

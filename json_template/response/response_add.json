@@ -1,0 +1,8 @@
+{
+    "type": "response",
+    "content": {
+        "operation": "add",
+        "uuid": "12345678",
+        "status": "success"
+    }
+}

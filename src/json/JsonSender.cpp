@@ -19,9 +19,22 @@ std::string JsonSender::createFullUpdateMessage(const std::vector<TodoItem>& ite
     return jsonObj.dump();
 }
 
-std::string JsonSender::createSuccessMessage() {
+std::string JsonSender::createSuccessMessage(const std::string& operationType, const std::string& uuid) {
     nlohmann::json jsonObj;
     jsonObj["type"] = "response";
-    jsonObj["content"] = { {"status", "success"} };
+    
+    if (!operationType.empty()) {
+        jsonObj["content"] = {
+            {"operation", operationType},
+            {"uuid", uuid},
+            {"status", "success"}
+        };
+
+    } else {
+        jsonObj["content"] = {
+            {"status", "success"}
+        };
+    }
+
     return jsonObj.dump();
 }
