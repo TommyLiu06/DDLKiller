@@ -87,7 +87,7 @@ and you should see the response messages:
 
 On source client:
 ```json 
-{"content":{"status":"success"},"type":"response"}
+{"type":"response","content":{"operation":"add","uuid":"20240615093000123","status":"success"}}
 ```
 
 On other clients:
