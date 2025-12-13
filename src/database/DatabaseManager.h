@@ -12,7 +12,7 @@ struct TodoItem {
     std::string dueDate = "";       // 待办事项逾期时间
     int completeFlag = -1;          // 待办事项完成标识 (1 - 已完成 / 0 - 未完成 / -1 - 未初始化)
 
-    bool operator==(const AddOperation&) const = default;
+    bool operator==(const TodoItem&) const = default;
 };
 
 class DatabaseManager

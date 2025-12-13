@@ -16,7 +16,7 @@ struct AddOperation {
 struct DeleteOperation {
     std::string targetUuid = "";
 
-    bool operator==(const AddOperation&) const = default;
+    bool operator==(const DeleteOperation&) const = default;
 };
 
 struct ModifyOperation {
@@ -27,7 +27,7 @@ struct ModifyOperation {
     std::string dueDate ="";
     int completeFlag = -1;
 
-    bool operator==(const AddOperation&) const = default;
+    bool operator==(const ModifyOperation&) const = default;
 };
 
 class JsonParser
